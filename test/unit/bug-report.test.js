@@ -14,8 +14,13 @@ import AsyncTestUtil from 'async-test-util';
 import RxDB from '../../dist/lib/index';
 import * as util from '../../dist/lib/util';
 
+import * as leveldbAdapter from 'pouchdb-adapter-leveldb';
+
 describe('bug-report.test.js', () => {
     it('should fail because it reproduces the bug', async () => {
+
+        RxDB.plugin(leveldbAdapter);
+
         // create a schema
         const mySchema = {
             version: 0,
@@ -45,12 +50,12 @@ describe('bug-report.test.js', () => {
         // create a database
         const db = await RxDB.create({
             name,
-            adapter: 'memory',
+            adapter: 'leveldb',
             ignoreDuplicate: true
         });
         // create a collection
         const collection = await db.collection({
-            name: 'crawlstate',
+            name: 'folder/crawlstate',
             schema: mySchema
         });
 
@@ -68,12 +73,12 @@ describe('bug-report.test.js', () => {
          */
         const dbInOtherTab = await RxDB.create({
             name,
-            adapter: 'memory',
+            adapter: 'leveldb',
             ignoreDuplicate: true
         });
         // create a collection
         const collectionInOtherTab = await dbInOtherTab.collection({
-            name: 'crawlstate',
+            name: 'folder/crawlstate',
             schema: mySchema
         });
 
